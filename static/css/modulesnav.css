@@ -1,0 +1,106 @@
+.active {
+  background-color: #2D3250;
+}
+
+:root {
+  --first-color-light: #646B90;
+  --title-color: #EFE1D1;
+  --text-color: #B9B4C7;
+  --text-color-light: #A5A1AA;
+  --body-color: #424769;
+  --container-color: #2D3250;
+}
+
+#dltbtns {
+  background: #550606;
+}
+#dltbtns:hover {
+  background: #6e0909;
+}
+
+.bg-first-color-light {
+  background-color: var(--first-color-light);
+}
+.text-title-color {
+  color: var(--title-color);
+}
+.text-text-color {
+  color: var(--text-color);
+}
+.text-text-color-light {
+  color: var(--text-color-light);
+}
+.bg-body-color {
+  background-color: var(--container-color);
+}
+.bg-container-color {
+  background-color: var(--body-color);
+}
+.border-first-color-light {
+  border-color: var(--first-color-light);
+}
+
+.container_modules {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container_modules .bg-first-color-light:hover {
+  background-color: #2D3250;
+  color: #EFE1D1;
+}
+
+.hover\:underline:hover {
+  text-decoration: underline;
+  color: var(--title-color);
+}
+.text-white {
+  color: white;
+}
+
+.sticky-header th {
+  position: sticky;
+  top: 0;
+  background-color: #2D3250;
+}
+
+#btnssss {
+  color: var(--text-color);
+  transition: color 0.15s ease-in;
+}
+#btnssss:hover {
+  color: blue;
+}
+
+.table-container {
+  max-height: 76vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4a5568 #2D3250;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #2D3250;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #4a5568;
+}
+
+.table_border {
+  border: 1px solid #2D3250;
+}
+
+.hover-row:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.sbmtbtn {
+  background-color: #646B90;
+}
+.sbmtbtn:hover {
+  background-color: #5c6281;
+}
