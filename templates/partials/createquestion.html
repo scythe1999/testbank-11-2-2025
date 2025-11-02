@@ -1,0 +1,4 @@
+<option value="">Select</option>
+{% for topicscreate in topicscreate %}
+<option value="{{ topicscreate.pk }}">{{ topicscreate.topic_name|upper|truncatechars:60  }}</option>
+{% endfor %}

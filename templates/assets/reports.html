@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+
+<style>
+  .hover-row:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+</style>
+{% if messages %}
+<div class="messages-container px-6 pb-2" id="cardtext">
+    {% for message in messages %}
+    <div class="message bg-custom-primary border border-gray-600 text-custom-text bg-green-400 px-3 py-2 rounded flex justify-between items-center">
+        <span>{{ message }}</span>
+        <button type="button" class="close-btn ml-2" onclick="this.parentElement.style.display='none'">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="flex justify-between items-center mx-6 my-2">
+    <form class="relative ml-auto" method="GET" action="{% url 'masterfilestudents' %}">
+        <label for="default-search" class="sr-only">Search</label>
+        <div class="flex items-center border border-gray-500 rounded-lg overflow-hidden bg-transparent">
+            <input 
+                name="q" 
+                type="search" 
+                id="default-search" 
+                class="block w-full p-3 text-xs outline-none bg-transparent text-black" 
+                placeholder="Search..." 
+                oninput="checkInput()"
+                {% if q %}
+                value="{{ q }}" 
+                {% else %}
+                value=""
+                {% endif %}
+                required 
+            />
+            <button 
+                type="submit" 
+                class="text-white buttons_for_ocr font-medium text-xs px-4 py-2 rounded-lg ml-2"
+            >Search</button>
+        </div>
+    </form>
+</div>
+<div class="mx-6 relative overflow-x-auto shadow-md sm:rounded-md table-container" >
+  <table class="w-full text-sm text-left rtl:text-right " id="cardtext">
+      <thead class="text-xs sticky-header">
+          <tr>
+              <th scope="col" class=" py-3 text-left pl-4">
+                Assessment ID
+              </th>
+              <th scope="col" class="px-6 py-3 w-2/5 text-left">
+                Assessment Period
+              </th>
+              <th scope="col" class=" py-3 text-left">
+                Percentage Weight
+              </th>
+              <th scope="col" class=" py-3 text-center">
+                  Date
+              </th>
+          </tr>
+      </thead>
+      <tbody class="text-xs">
+          {% for report in reports %}
+          <tr class="bg-white text-md hover-row border-b border-gray-500 dark:border-gray-200 whitespace-no-wrap"
+                                onclick="window.location='{% url 'reports_view_data' report.assessment_id %}';"
+                                style="cursor: pointer;">
+              <td class="py-2 text-left pl-4">
+                {{ report.assessment_id }}
+              </td>
+              <td class="px-6 py-2 font-medium whitespace-nowrap">
+                {{ report.subject }} - {{report.topic|first_letters}}
+              </td>
+              <td class="py-2 text-left">
+                {{ report.percentage_weight }}%
+              </td>
+              <td class="py-2 text-center">
+                {{ report.created_at}}
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+{% endblock %}
+

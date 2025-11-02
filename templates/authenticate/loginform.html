@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charSet="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="My Express JS website">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="h-screen bg-gradient-to-br from-gray-400 to-white flex justify-center items-center w-full">
+        <form method='POST'>
+         
+          {% csrf_token %}
+            <div class="bg-white px-10 py-8 rounded-xl w-screen shadow-xl max-w-sm">
+                <div class="space-y-4">
+                    <h1 class="text-center text-2xl font-semibold text-gray-600">Login</h1>
+                    <hr>
+                    {% if error %}
+                    <div class="bg-red-500 text-white p-2 rounded-md shadow-md">
+                      <p>{{ error }}</p>
+                    </div>
+                    {% endif %}
+                <div class="flex items-center border-2 py-2 px-3 rounded-md mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-200" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                    <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z">
+                  </path></svg>
+                    <input autocomplete="off" class="pl-2 outline-none border-none w-full" type="text" name="username" value="" placeholder="Username" required/>
+
+                </div>
+                <div class="flex items-center border-2 py-2 px-3 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-200" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                  </svg>
+                    <input autocomplete="off" class="pl-2 outline-none border-none w-full" type="password" name="password" placeholder="Password" required/>
+                </div>
+                </div>
+                <div class="flex justify-left items-center mt-4">
+                    <p class="inline-flex items-center text-gray-700 font-medium text-xs text-center">
+                        <input type="checkbox" id="rememberMeCheckbox" name="rememberMe" class="mr-2">
+                        <span class="text-xs font-semibold">Remember me?</span>
+                    </p>
+                </div>
+                <button type="submit" value="login" id="login" style="background: linear-gradient(45deg, #222831, #534a88);" class="mt-6 w-full shadow-xl text-indigo-100 py-2 rounded-md text-lg tracking-wide transition duration-1000">Login</button>
+                <hr>
+                <div class="flex justify-center items-center mt-4">
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

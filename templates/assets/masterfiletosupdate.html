@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div  class="p-4 py-6">
+    <div class="flex justify-between items-center mb-4">
+        <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+          <button onclick="window.history.back()">
+            <i class='bx bx-arrow-back'></i>
+          </button>
+        </div>
+        <h1 class="text-center text-3xl font-semibold" id="cardtext">Update Table of Specification</h1>
+        <div class="w-8"></div>
+      </div>
+    <div id="cardtext" class="text-xs">
+        <form method="post" action="{% url 'submit_table_of_specification' group_id=group_id %}" class="space-y-6">
+            {% csrf_token %}
+           <h1 class="text-2xl font-bold text-start">{{ subject }}</h1>
+            <table class="min-w-full border-collapse border border-gray-500">
+                <thead class="bg-gray-700 text-white">
+                    <tr>
+                        <th class="border border-gray-500 px-4 py-2 text-center">TOPIC</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">PWD%</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Remembering</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Understanding</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Applying</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Analyzing</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Evaluating</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Creating</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">NID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for topic_id, topic_data in topic.items %}
+                    <tr class="text-center topic-row bg-white" data-topic-id="{{ topic_id }}">
+                        <td class="w-1/4 border border-gray-500 px-4 py-2 text-left">{{ topic_data.topic_name }}</td>
+                
+                        <td class="border border-gray-500 px-4 py-2 text-center">
+                            <input type="number" id="pwd_total_{{ topic_id }}" name="pwd_total_{{ topic_id }}" 
+                                value="{{ topic_data.pwd_total|default:0 }}" class="bg-transparent text-center w-12" disabled />
+                        </td>
+                
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" id="remembering_total_{{ topic_id }}" name="remembering_total_{{ topic_id }}" 
+                                value="{{ topic_data.totals.remembering }}" class="bg-transparent text-center w-12" />
+                        </td>
+                
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" id="understanding_total_{{ topic_id }}" name="understanding_total_{{ topic_id }}" 
+                                value="{{ topic_data.totals.understanding }}" class="bg-transparent text-center w-12" />
+                        </td>
+                
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" id="applying_total_{{ topic_id }}" name="applying_total_{{ topic_id }}" 
+                                value="{{ topic_data.totals.applying }}" class="bg-transparent text-center w-12" />
+                        </td>
+                
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" id="analyzing_total_{{ topic_id }}" name="analyzing_total_{{ topic_id }}" 
+                                value="{{ topic_data.totals.analyzing }}" class="bg-transparent text-center w-12" />
+                        </td>
+                
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" id="evaluating_total_{{ topic_id }}" name="evaluating_total_{{ topic_id }}" 
+                                value="{{ topic_data.totals.evaluating }}" class="bg-transparent text-center w-12" />
+                        </td>
+                
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" id="creating_total_{{ topic_id }}" name="creating_total_{{ topic_id }}" 
+                                value="{{ topic_data.totals.creating }}" class="bg-transparent text-center w-12" />
+                        </td>
+                
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" id="total_topic_{{ topic_id }}" name="total_topic_{{ topic_id }}" 
+                                value="0" class="bg-transparent text-center w-12" disabled />
+                        </td>
+                    </tr>
+                {% endfor %}
+                
+
+                    <tr class="text-center bg-white">
+                        <td class="w-1/4 border border-gray-500 px-4 py-2 text-left">NUMBER OF ITEMS AND DISTRIBUTION</td>
+                        <td class="border border-gray-500 px-4 py-2 text-center">
+                            <div class="flex items-center justify-center">
+                                <input type="number" name="pwd_cat_update" value="0" class="bg-transparent text-center w-12" disabled />
+                                <span class="ml-1">%</span>
+                            </div>
+                        </td>
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" name="remembering_cat" value="0" class="bg-transparent text-center w-12 px-2" disabled />
+                        </td>
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" name="understanding_cat" value="0" class="bg-transparent text-center w-12 px-2" disabled />
+                        </td>
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" name="applying_cat" value="0" class="bg-transparent text-center w-12 px-2" disabled />
+                        </td>
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" name="analyzing_cat" value="0" class="bg-transparent text-center w-12 px-2" disabled />
+                        </td>
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" name="evaluating_cat" value="0" class="bg-transparent text-center w-12 px-2" disabled />
+                        </td>
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" name="creating_cat" value="0" class="bg-transparent text-center w-12 px-2" disabled />
+                        </td>
+                        <td class="border border-gray-500 px-4 py-2">
+                            <input type="number" name="totals_cat" value="0" class="bg-transparent text-center w-12 px-2" disabled />
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+
+            {% for topic in topics %}
+            <table class="min-w-full border-collapse border border-gray-500 mt-4">
+                <thead class="bg-gray-700 text-white">
+                    <tr>
+                        <th class="border border-gray-500 px-4 py-2 text-center">{{ topic.topic_name }}</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">PWD</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Remembering</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Understanding</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Applying</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Analyzing</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Evaluating</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Creating</th>
+                        <th class="border border-gray-500 px-4 py-2 text-center">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subtopic in topic.subtopics.values %}
+                        <tr class="text-center bg-white" data-topic-id="{{ topic.id }}" data-subtopic-id="{{ subtopic.subtopic_id }}">
+                            <td class="w-1/4 border border-gray-500 px-4 py-2 text-left">{{ subtopic.subtopic_name }}</td>
+                            <td class="border border-gray-500 px-4 py-2">
+                               <input type="number" step="any" id="pwd_{{ subtopic.subtopic_id }}" name="pwd_{{ subtopic.subtopic_id }}" value="{{ subtopic.pwd|default:0 }}" class="bg-transparent text-center w-20 rounded px-2" />
+                            </td>
+                            <td class="border border-gray-500 px-4 py-2">
+                                <input type="number" step="any" id="remembering_{{ subtopic.subtopic_id }}" name="remembering_{{ subtopic.subtopic_id }}" value="{{ subtopic.totals.remembering|default:0 }}" class="bg-transparent text-center w-12 rounded px-2" />
+                            </td>
+                            <td class="border border-gray-500 px-4 py-2">
+                                <input type="number" step="any" id="understanding_{{ subtopic.subtopic_id }}" name="understanding_{{ subtopic.subtopic_id }}" value="{{ subtopic.totals.understanding|default:0 }}" class="bg-transparent text-center w-12 rounded px-2" />
+                            </td>
+                            <td class="border border-gray-500 px-4 py-2">
+                                <input type="number" step="any" id="applying_{{ subtopic.subtopic_id }}" name="applying_{{ subtopic.subtopic_id }}" value="{{ subtopic.totals.applying|default:0 }}" class="bg-transparent text-center w-12 rounded px-2" />
+                            </td>
+                            <td class="border border-gray-500 px-4 py-2">
+                                <input type="number" step="any" id="analyzing_{{ subtopic.subtopic_id }}" name="analyzing_{{ subtopic.subtopic_id }}" value="{{ subtopic.totals.analyzing|default:0 }}" class="bg-transparent text-center w-12 rounded px-2" />
+                            </td>
+                            <td class="border border-gray-500 px-4 py-2">
+                                <input type="number" step="any" id="evaluating_{{ subtopic.subtopic_id }}" name="evaluating_{{ subtopic.subtopic_id }}" value="{{ subtopic.totals.evaluating|default:0 }}" class="bg-transparent text-center w-12 rounded px-2" />
+                            </td>
+                            <td class="border border-gray-500 px-4 py-2">
+                                <input type="number" step="any" id="creating_{{ subtopic.subtopic_id }}" name="creating_{{ subtopic.subtopic_id }}" value="{{ subtopic.totals.creating|default:0 }}" class="bg-transparent text-center w-12 rounded px-2" />
+                            </td>
+                            <td class="border border-gray-500 px-4 py-2">
+                                <input type="number" id="total_{{ subtopic.subtopic_id }}" name="total_{{ subtopic.subtopic_id }}" value="{{ subtopic.total_generated|default:0 }}" class="bg-transparent text-center w-12 rounded px-2" disabled />
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endfor %}
+            <div class="mt-auto flex my-4">
+                <span class="flex-1"></span>
+                <button id="btns" class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="submit">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    
+        function updateSubtopicTotal(subtopicId) {
+            console.log("Updating subtopic ID:", subtopicId);
+    
+            const rememberingElement = document.getElementById(`remembering_${subtopicId}`);
+            const understandingElement = document.getElementById(`understanding_${subtopicId}`);
+            const applyingElement = document.getElementById(`applying_${subtopicId}`);
+            const analyzingElement = document.getElementById(`analyzing_${subtopicId}`);
+            const evaluatingElement = document.getElementById(`evaluating_${subtopicId}`);
+            const creatingElement = document.getElementById(`creating_${subtopicId}`);
+            const pwdElement = document.getElementById(`pwd_${subtopicId}`);
+    
+            const remembering = parseFloat(rememberingElement.value) || 0;
+            const understanding = parseFloat(understandingElement.value) || 0;
+            const applying = parseFloat(applyingElement.value) || 0;
+            const analyzing = parseFloat(analyzingElement.value) || 0;
+            const evaluating = parseFloat(evaluatingElement.value) || 0;
+            const creating = parseFloat(creatingElement.value) || 0;
+    
+            const total = remembering + understanding + applying + analyzing + evaluating + creating;
+    
+            const totalElement = document.getElementById(`total_${subtopicId}`);
+            if (totalElement) {
+                totalElement.value = total;
+            }
+    
+            updateParentTopicTotals(subtopicId);
+        }
+    
+        function updateParentTopicTotals(subtopicId) {
+            const subtopicElement = document.querySelector(`[data-subtopic-id="${subtopicId}"]`);
+            
+            if (!subtopicElement) {
+                console.error(`Subtopic with ID ${subtopicId} not found.`);
+                return;
+            }
+    
+            const topicRow = subtopicElement.closest('.topic-row');
+            if (!topicRow) {
+                console.error(`No parent topic-row found for subtopic ID ${subtopicId}.`);
+                return;
+            }
+    
+            const topicId = topicRow.getAttribute('data-topic-id');
+            if (!topicId) {
+                console.error(`No topic ID found for subtopic ID ${subtopicId}.`);
+                return;
+            }
+    
+            console.log('Updating parent topic totals for topicId:', topicId);
+    
+            let rememberingTotal = 0;
+            let understandingTotal = 0;
+            let applyingTotal = 0;
+            let analyzingTotal = 0;
+            let evaluatingTotal = 0;
+            let creatingTotal = 0;
+            let pwdTotal = 0;
+    
+            const subtopics = document.querySelectorAll(`[data-topic-id="${topicId}"]`);
+            subtopics.forEach(subtopic => {
+                const subtopicId = subtopic.getAttribute('data-subtopic-id');
+    
+                const rememberingElement = document.getElementById(`remembering_${subtopicId}`);
+                const understandingElement = document.getElementById(`understanding_${subtopicId}`);
+                const applyingElement = document.getElementById(`applying_${subtopicId}`);
+                const analyzingElement = document.getElementById(`analyzing_${subtopicId}`);
+                const evaluatingElement = document.getElementById(`evaluating_${subtopicId}`);
+                const creatingElement = document.getElementById(`creating_${subtopicId}`);
+                const pwdElement = document.getElementById(`pwd_${subtopicId}`);
+    
+                rememberingTotal += parseFloat(rememberingElement.value) || 0;
+                understandingTotal += parseFloat(understandingElement.value) || 0;
+                applyingTotal += parseFloat(applyingElement.value) || 0;
+                analyzingTotal += parseFloat(analyzingElement.value) || 0;
+                evaluatingTotal += parseFloat(evaluatingElement.value) || 0;
+                creatingTotal += parseFloat(creatingElement.value) || 0;
+                pwdTotal += parseFloat(pwdElement.value) || 0;
+            });
+    
+            const rememberingTotalElement = document.getElementById(`remembering_total_${topicId}`);
+            if (rememberingTotalElement) rememberingTotalElement.value = rememberingTotal;
+    
+            const understandingTotalElement = document.getElementById(`understanding_total_${topicId}`);
+            if (understandingTotalElement) understandingTotalElement.value = understandingTotal;
+    
+            const applyingTotalElement = document.getElementById(`applying_total_${topicId}`);
+            if (applyingTotalElement) applyingTotalElement.value = applyingTotal;
+    
+            const analyzingTotalElement = document.getElementById(`analyzing_total_${topicId}`);
+            if (analyzingTotalElement) analyzingTotalElement.value = analyzingTotal;
+    
+            const evaluatingTotalElement = document.getElementById(`evaluating_total_${topicId}`);
+            if (evaluatingTotalElement) evaluatingTotalElement.value = evaluatingTotal;
+    
+            const creatingTotalElement = document.getElementById(`creating_total_${topicId}`);
+            if (creatingTotalElement) creatingTotalElement.value = creatingTotal;
+    
+            const pwdTotalElement = document.getElementById(`pwd_total_${topicId}`);
+            if (pwdTotalElement) pwdTotalElement.value = pwdTotal;
+    
+            const topicTotal = rememberingTotal + understandingTotal + applyingTotal + analyzingTotal + evaluatingTotal + creatingTotal;
+            const totalTopicElement = document.getElementById(`total_topic_${topicId}`);
+            if (totalTopicElement) totalTopicElement.value = topicTotal;
+        }
+    
+        const subtopicInputs = document.querySelectorAll('input[type="number"]');
+        subtopicInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const subtopicId = this.name.split('_')[1];  
+                if (subtopicId !== 'total') {  
+                    updateSubtopicTotal(subtopicId);
+                }
+            });
+        });
+    
+        {% for topic in topics %}
+            {% for subtopic in topic.subtopics.values %}
+                updateSubtopicTotal({{ subtopic.subtopic_id }});
+            {% endfor %}
+        {% endfor %}
+    
+    });
+    </script>
+    
+{% endblock %}

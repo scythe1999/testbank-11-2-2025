@@ -1,0 +1,38 @@
+{% load static %}
+
+{% url "modulessubject" as modulessubject %}
+{% url "modulestopic" as modulestopic %}
+{% url "modulessubtopic" as modulessubtopic %}
+{% url "modules" as modules %}
+{% url "modulessubjectupdate" as modulessubjectupdate %}
+{% url "modulestopicupdate" as modulestopicupdate %}
+{% url "modulessubtopicupdate" as modulessubtopicupdate %}
+
+<div class="px-4 py-6 w-full flex relative" style="height: 60vh;">
+    
+<div class="border-r-2 border-gray-700 p-4 flex flex-row">
+
+    <div class="flex flex-col w-full text-sm">
+        <h1 class="text-xl font-bold pb-4 whitespace-nowrap" id="content_hierarchy">Content Hierarchy</h1>
+        <a href="{% url 'modulessubject' %}" class="links_for_modulenavs block ml-8 mb-2 px-4 cursor-pointer rounded-md shadow transition duration-200 
+        {% if request.path == modulessubject %}active_subject
+        {% elif request.path == modules %}active_subject
+        {% elif request.resolver_match.url_name == 'modulessubjectupdate' %}active_subject
+        {% endif %}" id="btns_forsubject">
+            <div class="p-2 text-md w-full">Subject</div>
+        </a>
+        <a href="{% url 'modulestopic' %}" class="links_for_modulenavs block ml-8 mb-2 px-4 cursor-pointer rounded-md shadow transition duration-200 
+        {% if request.path == modulestopic %}active_subject
+        {% elif request.resolver_match.url_name == 'modulestopicupdate' %}active_subject
+        {% endif %}" id="btns_forsubject">
+            <div class="p-2 text-md w-full">Topic</div>
+        </a>
+        <a href="{% url 'modulessubtopic' %}" class="links_for_modulenavs block ml-8 mb-2 px-4 cursor-pointer rounded-md shadow transition duration-200 
+        {% if request.path == modulessubtopic %}active_subject
+        {% elif request.resolver_match.url_name == 'modulessubtopicupdate' %}active_subject
+        {% endif %}" id="btns_forsubject">
+            <div class="p-2 text-md w-full">Competency</div>
+        </a>        
+    </div>
+
+</div>

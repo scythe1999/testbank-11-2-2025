@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    
+<div class="pb-4" id="cardtext">
+    <div class="mx-auto my-auto">
+        <div>
+            <div class="flex justify-between mx-4 items-center mb-4">
+                <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+                  <button onclick="window.history.back()">
+                    <i class='bx bx-arrow-back'></i>
+                  </button>
+                </div>
+                <h1 class="text-center text-3xl font-semibold" id="cardtext">Assessment Information</h1>
+                <div class="w-8"></div>
+              </div>
+            {% for assessment in assessments %}
+                {% if forloop.first %}
+                    <div class="mb-2">
+                        <h3 class="text-lg font-medium" id="summarytotals">Subject: 
+                            <span class="text-md">{{ assessment.subject.subject_name }}</span>
+                        </h3>
+                        <h3 class="text-lg font-medium" id="summarytotals">Topic: 
+                            <span class="text-md">{{ assessment.topic.topic_name }}</span>
+                        </h3>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="assessment_id" value="{{ assessments.0.assessment_id }}" />
+        
+                <table class="w-full table-auto border-collapse text-sm" id="subtopic-table">
+                    <thead>
+                        <tr class="sticky-header">
+                            <th class="border border-gray-500 px-4 py-2">Competencies</th>
+                            <th class="border border-gray-500 px-4 py-2">Remembering</th>
+                            <th class="border border-gray-500 px-4 py-2">Understanding</th>
+                            <th class="border border-gray-500 px-4 py-2">Applying</th>
+                            <th class="border border-gray-500 px-4 py-2">Analyzing</th>
+                            <th class="border border-gray-500 px-4 py-2">Evaluating</th>
+                            <th class="border border-gray-500 px-4 py-2">Creating</th>
+                            <th class="border border-gray-500 px-4 py-2">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assessment in assessments %}
+                            <tr data-id="{{ assessment.id }}">
+                                <td class="border border-gray-500 px-2 py-2 text-left">{{ assessment.competencies.subtopic_name }}</td>
+                                <td class="border border-gray-500 px-2 py-2 text-center">
+                                    <input type="number" name="remembering_{{ assessment.id }}" value="{{ assessment.remembering }}" class="bg-transparent w-12 px-2 category-input" data-category="remembering" disabled/>
+                                </td>
+                                <td class="border border-gray-500 px-2 py-2 text-center">
+                                    <input type="number" name="understanding_{{ assessment.id }}" value="{{ assessment.understanding }}" class="bg-transparent w-12 px-2 category-input" data-category="understanding" disabled/>
+                                </td>
+                                <td class="border border-gray-500 px-2 py-2 text-center">
+                                    <input type="number" name="applying_{{ assessment.id }}" value="{{ assessment.applying }}" class="bg-transparent w-12 px-2 category-input" data-category="applying" disabled/>
+                                </td>
+                                <td class="border border-gray-500 px-2 py-2 text-center">
+                                    <input type="number" name="analyzing_{{ assessment.id }}" value="{{ assessment.analyzing }}" class="bg-transparent w-12 px-2 category-input" data-category="analyzing" disabled/>
+                                </td>
+                                <td class="border border-gray-500 px-2 py-2 text-center">
+                                    <input type="number" name="evaluating_{{ assessment.id }}" value="{{ assessment.evaluating }}" class="bg-transparent w-12 px-2 category-input" data-category="evaluating" disabled/>
+                                </td>
+                                <td class="border border-gray-500 px-2 py-2 text-center">
+                                    <input type="number" name="creating_{{ assessment.id }}" value="{{ assessment.creating }}" class="bg-transparent w-12 px-2 category-input" data-category="creating" disabled/>
+                                </td>
+                                <td class="border border-gray-500 px-2 py-2 text-center">
+                                    <input type="number" name="total_{{ assessment.id }}" value="{{ assessment.remembering|add:assessment.understanding|add:assessment.applying|add:assessment.analyzing|add:assessment.evaluating|add:assessment.creating }}" class="bg-transparent w-12 px-2 total-row" readonly disabled/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="border border-gray-500 px-2 py-2 text-left">NUMBER OF ITEMS AND DISTRIBUTION</td>
+                            <td class="border border-gray-500 px-2 py-2 text-center">
+                                <input type="number" name="subtopic_remembering_total" id="subtopic_remembering_total" class="bg-transparent w-12 px-2" readonly />
+                            </td>
+                            <td class="border border-gray-500 px-2 py-2 text-center">
+                                <input type="number" name="subtopic_understanding_total" id="subtopic_understanding_total" class="bg-transparent w-12 px-2" readonly />
+                            </td>
+                            <td class="border border-gray-500 px-2 py-2 text-center">
+                                <input type="number" name="subtopic_applying_total" id="subtopic_applying_total" class="bg-transparent w-12 px-2" readonly />
+                            </td>
+                            <td class="border border-gray-500 px-2 py-2 text-center">
+                                <input type="number" name="subtopic_analyzing_total" id="subtopic_analyzing_total" class="bg-transparent w-12 px-2" readonly />
+                            </td>
+                            <td class="border border-gray-500 px-2 py-2 text-center">
+                                <input type="number" name="subtopic_evaluating_total" id="subtopic_evaluating_total" class="bg-transparent w-12 px-2" readonly />
+                            </td>
+                            <td class="border border-gray-500 px-2 py-2 text-center">
+                                <input type="number" name="subtopic_creating_total" id="subtopic_creating_total" class="bg-transparent w-12 px-2" readonly />
+                            </td>
+                            <td class="border border-gray-500 px-2 py-2 text-center">
+                                <input type="number" name="subtopic_total_distribution" id="subtopic_total_distribution" class="bg-transparent w-12 px-2" readonly />
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </form>
+        </div>
+    </div>
+    
+    
+</div>
+
+<script>
+    function updateRowTotal(row) {
+        const remembering = parseFloat(row.querySelector('[name^="remembering_"]').value) || 0;
+        const understanding = parseFloat(row.querySelector('[name^="understanding_"]').value) || 0;
+        const applying = parseFloat(row.querySelector('[name^="applying_"]').value) || 0;
+        const analyzing = parseFloat(row.querySelector('[name^="analyzing_"]').value) || 0;
+        const evaluating = parseFloat(row.querySelector('[name^="evaluating_"]').value) || 0;
+        const creating = parseFloat(row.querySelector('[name^="creating_"]').value) || 0;
+
+        const total = remembering + understanding + applying + analyzing + evaluating + creating;
+        row.querySelector('.total-row').value = total;
+
+        updateCategoryTotals();
+    }
+
+    function updateCategoryTotals() {
+        const categorySums = {
+            remembering: 0,
+            understanding: 0,
+            applying: 0,
+            analyzing: 0,
+            evaluating: 0,
+            creating: 0,
+        };
+
+        document.querySelectorAll('tr[data-id]').forEach(row => {
+            categorySums.remembering += parseFloat(row.querySelector('[name^="remembering_"]').value) || 0;
+            categorySums.understanding += parseFloat(row.querySelector('[name^="understanding_"]').value) || 0;
+            categorySums.applying += parseFloat(row.querySelector('[name^="applying_"]').value) || 0;
+            categorySums.analyzing += parseFloat(row.querySelector('[name^="analyzing_"]').value) || 0;
+            categorySums.evaluating += parseFloat(row.querySelector('[name^="evaluating_"]').value) || 0;
+            categorySums.creating += parseFloat(row.querySelector('[name^="creating_"]').value) || 0;
+        });
+
+        document.getElementById('subtopic_remembering_total').value = categorySums.remembering;
+        document.getElementById('subtopic_understanding_total').value = categorySums.understanding;
+        document.getElementById('subtopic_applying_total').value = categorySums.applying;
+        document.getElementById('subtopic_analyzing_total').value = categorySums.analyzing;
+        document.getElementById('subtopic_evaluating_total').value = categorySums.evaluating;
+        document.getElementById('subtopic_creating_total').value = categorySums.creating;
+
+        const totalDistribution = Object.values(categorySums).reduce((sum, value) => sum + value, 0);
+        document.getElementById('subtopic_total_distribution').value = totalDistribution;
+    }
+
+    document.querySelectorAll('.category-input').forEach(input => {
+        input.addEventListener('input', function() {
+            const row = this.closest('tr');
+            updateRowTotal(row);
+        });
+    });
+
+    updateCategoryTotals();
+</script>
+
+{% endblock %}

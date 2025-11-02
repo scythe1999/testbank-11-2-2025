@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="w-full" id="cardtext">
+
+  <div class="flex justify-between mx-4 items-center mb-4">
+    <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+      <button onclick="window.history.back()">
+        <i class='bx bx-arrow-back'></i>
+      </button>
+    </div>
+    <h1 class="text-center text-3xl font-semibold" id="cardtext">Update Students</h1>
+    <div class="w-8"></div>
+  </div>
+<form action="
+  {% url 'masterfilestudentsupdate' pk=student.id %}
+  " method="post" class="my-auto flex flex-col w-full p-6">
+
+
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="message bg-custom-primary border border-custom-secondary text-custom-text px-3 py-2 rounded flex justify-between items-center">
+            <span>{{ message }}</span>
+            <button type="button" class="close-btn ml-2" onclick="this.parentElement.style.display='none'">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% csrf_token %}
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-2 pb-6 w-1/2 px-auto mx-auto" id="cardtext">
+    <div class="w-full text-sm">
+      <label for="corans" id="cardtext" >Lastname</label>
+      <input  name="lastName_update" value="{{student.lastname}}" type="text" id="corans" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+    </div>
+    <div class="w-full text-sm">
+      <label for="dis1" id="cardtext" >Firstname</label>
+      <input value="{{student.firstname}}" name="firstName_update" type="text" id="dis1" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+    </div>
+    <div class="w-full text-sm">
+      <label for="studentschoolid" id="cardtext" >Student school ID</label>
+      <input value="{{student.studentschoolid}}" name="firstName_update" type="text" id="dis1" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+    </div>
+    <div class="w-full text-sm">
+      <label for="dis2" id="cardtext" >Student ID</label>
+      <input name="studentId" type="text" value="{{student.studentid}}" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" readonly />
+    </div>
+    <div class="text-sm">
+      <p id="cardtext">Academic period</p>
+      <select name="acadyear" class="ddrop border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" 
+              readonly>
+          <option>{{student.academic_year.year_series }} - {{student.academic_year.period}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="mt-auto flex">
+    <span class="flex-1"></span>
+    <button id="btns" class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="submit">
+      Submit
+    </button>
+  </div>
+</form> 
+</div>
+{% endblock %}

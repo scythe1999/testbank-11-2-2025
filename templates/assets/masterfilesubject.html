@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+  .hover-row:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+</style>
+
+  {% include "includes/modulesnav.html" %}
+  
+
+  <div class="w-full h-full px-6 py-6" id="subjectmoduletable">
+    {% if messages %}
+    <div class="messages-container" id="cardtext">
+        {% for message in messages %}
+        <div class="message bg-custom-primary border border-gray-600 text-custom-text bg-green-400 px-3 py-2 rounded flex justify-between items-center">
+            <span>{{ message }}</span>
+            <button type="button" class="close-btn ml-2" onclick="this.parentElement.style.display='none'">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex justify-between items-center my-2">
+      <div class="">
+        <div 
+        hx-get="{% url 'modules_create_subject' %}"
+        hx-trigger="click"
+        hx-target="#subjectmoduletable"
+        >
+          <button id="btns" type="button" class="bg-blue-500 hover:bg-blue-600 font-medium text-xs px-4 py-2 rounded-lg">
+            Create
+          </button>
+        </div>
+      </div>
+      <form class="relative ml-auto" method="GET" action="{% url 'modulessubject' %}">
+          <label for="default-search" class="sr-only">Search</label>
+          <div class="flex items-center border border-gray-500 rounded-lg overflow-hidden bg-transparent">
+              <input 
+                  name="q" 
+                  type="search" 
+                  id="default-search" 
+                  class="block w-full p-3 text-xs outline-none bg-transparent text-black" 
+                  placeholder="Search..." 
+                  oninput="checkInput()"
+                  value="{{ request.GET.q }}" 
+                  {% if q %}
+                  value="{{ q }}" 
+                  {% else %}
+                  value=""
+                  {% endif %}
+                  required 
+              />
+              <button 
+                  type="submit" 
+                  class="text-white buttons_for_ocr font-medium text-xs px-4 py-2 rounded-lg ml-2"
+              >Search</button>
+          </div>
+      </form>
+  </div>
+      <div class=" overflow-x-auto shadow-md sm:rounded-md table-container">
+        <table class="w-full text-sm text-left rtl:text-right">
+          <thead class="text-xs sticky-header">
+            <tr>
+              <th scope="col" class="flex-1 px-6 py-3">
+                Subject name
+              </th>
+              <th scope="col" class="w-1/4 px-3 py-3">
+                Code
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-xs overflow-y-auto max-h-[300px]" id="restrict_body">
+            {% for subject in subjects %}
+              <tr class="hover-row border-b border-gray-500 dark:border-gray-200 whitespace-no-wrap " onclick="window.location='{% url 'modulessubjectupdate' subject.id %}';" style="cursor: pointer;">
+                <td class="px-6 py-2 font-medium" style="white-space: nowrap;">
+                  {{ subject.subject_name|capfirst|truncatechars:80 }}
+                </td>
+                <td class="px-3 py-2" style="white-space: nowrap;">
+                  {{ subject.subject_code|truncatechars:25 }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+    function checkInput() {
+      const searchInput = document.getElementById('default-search').value.trim(); 
+  
+      if (searchInput === '') {
+          window.location.href = "{% url 'modulessubject' %}";  
+      }
+  }
+  </script>
+</div>
+{% endblock content %}

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<div id="cardtext" class="relative table_to_print my-6 p-6 bg-white rounded-lg shadow-md">
+
+
+  <div class="flex justify-between items-center mb-4">
+    <div class="to_hide text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+      <button onclick="window.history.back()">
+        <i class='bx bx-arrow-back'></i>
+      </button>
+    </div>
+    <div class="exam_id font-bold text-lg"> 
+      Exam ID: {{ assessment_exam_id }} 
+    </div>
+      <div style="display: flex;">
+        <button  id="btns-questions" onclick="printQuestions()" 
+            class="text-white font-medium text-xs px-4 mt-2 py-2 buttons_for_ocr"
+            style="border-right: 1px solid #ccc; border-radius: 8px 0 0 8px;"
+        >Print Questions</button>
+        
+        <button id="btns-answerkey" onclick="printAnswerKey()"
+        class="text-white font-medium text-xs px-4 mt-2 py-2 buttons_for_ocr"
+        style="border-right: 1px solid #ccc; border-radius: 0;"
+        >Print Answer Key</button>
+    
+        
+        <form method="POST" 
+        action="{% url 'export_answerkey' assessment_exam_id %}" 
+        style="margin: 0;"
+        >
+            {% csrf_token %}
+            <button type="submit" id="btns" 
+                class="text-white font-medium text-xs px-4 mt-2 py-2 buttons_for_ocr"
+                style="border-radius: 0 8px 8px 0;"
+            >Export Answer Key</button>
+        </form>
+      </div>
+
+
+  </div>
+
+  <div id="questions-section">
+    {% for item in page_obj %}
+    <div class="mb-4">
+        <div class="text-sm">{{ item.number }}. {{ item.question }}</div>
+        <div class="grid grid-cols-2 gap-1 mt-2 text-xs">
+            <div>A. {{ item.a|capfirst }}</div>
+            <div>B. {{ item.b|capfirst }}</div>
+            <div>C. {{ item.c|capfirst }}</div>
+            <div>D. {{ item.d|capfirst }}</div>
+        </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div id="answerkey-section" style="display:none;">
+    {% for item in page_obj %}
+    <div class="mb-4">
+        <div class="text-sm">{{ item.number }}. {{ item.correct_choice }} - {{ item.correct_answer }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="pagination flex justify-center items-center space-x-2 mt-4">
+    <span class="step-links flex space-x-1">
+      {% if page_obj.has_previous %}
+        <a href="?page=1" class="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">&laquo; First</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Previous</a>
+      {% endif %}
+      
+      <span class="current px-3 py-1 bg-blue-500 text-white rounded">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+      </span>
+  
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Last &raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+  
+</div>
+<style>
+  @media print {
+    * {
+      padding: 0;
+      margin: 0;
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+  
+    body {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      background: transparent !important;
+      z-index: -100 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      height: auto !important;
+      width: 100vw !important;
+      font-size: 12px;
+      padding-bottom: 100px;
+    }
+  
+    .table_to_print {
+      padding-top: 100px;
+      font-family: "Times New Roman", Times, serif !important;
+      color: black !important;
+      z-index: 100 !important;
+      width: 100vw;
+      page-break-before: always;
+    }
+    .pagination{
+      display: none !important;
+    }
+    .exam_id {
+      position: absolute;
+      top: 20;
+      right: 0;
+      padding-bottom: 20px;
+      margin-top: 20px;
+      padding-right: 10px;
+      font-family: "Times New Roman", Times, serif !important;
+      font-size: 12px;
+    }
+  
+    header, #to_hide, .to_hide {
+      display: none !important;
+    }
+  
+    .question {
+      page-break-inside: avoid;
+    }
+  
+    .table-container {
+      overflow: visible !important;
+      page-break-inside: avoid !important;
+    }
+  
+    h1, h4 {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  
+    .testpaper_header h1, .testpaper_header h4 {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    .first-page-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url("{% static 'images/watermark.png' %}") !important;
+      background-size: cover !important;
+      background-position: top center !important;
+      background-repeat: no-repeat !important;
+      z-index: -1;
+    }
+
+  }
+  
+</style>
+<script>
+  function printQuestions() {
+    var answerkeySection = document.getElementById('answerkey-section');
+    var questionsSection = document.getElementById('questions-section');
+    
+    answerkeySection.style.display = 'none';
+    questionsSection.style.display = 'block';
+    
+    window.print();
+  }
+
+  function printAnswerKey() {
+    var answerkeySection = document.getElementById('answerkey-section');
+    var questionsSection = document.getElementById('questions-section');
+    
+    answerkeySection.style.display = 'block';
+    questionsSection.style.display = 'none';
+    
+    window.print();
+  }
+</script>
+
+<div class="first-page-background"></div>
+
+{% endblock %}

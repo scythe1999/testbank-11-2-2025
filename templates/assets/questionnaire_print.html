@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% load custom_filters %}
+<style>
+    .hover-row:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+    .sbmtbtn{
+        background-color: #646B90;
+    }
+    .sbmtbtn:hover{
+        background-color: #5c6281;
+    }
+</style>
+<div id="cardtext" class="p-4 m-4">
+    <div class="flex justify-between mx-4 items-center">
+        <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+          <button onclick="window.history.back()">
+            <i class='bx bx-arrow-back'></i>
+          </button>
+        </div>
+        <h1 class="text-center text-3xl font-semibold" id="cardtext">Exam Lists</h1>
+        <div class="w-8"></div>
+      </div>
+    <div class="rounded-md " id="cardtext">
+    <div class="w-full mx-auto">
+        <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
+            <ul class="flex flex-wrap -mb-px" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block text-gray-500 hover:text-gray-600 hover:border-gray-300 rounded-t-lg py-4 px-4 text-sm font-medium text-center border-transparent border-b-2 dark:text-gray-400 dark:hover:text-gray-300" id="assessment-tab" data-tabs-target="#assessment" type="button" role="tab" aria-controls="assessment" aria-selected="false">Pre-Qualifying</button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block text-gray-500 hover:text-gray-600 hover:border-gray-300 rounded-t-lg py-4 px-4 text-sm font-medium text-center border-transparent border-b-2 dark:text-gray-400 dark:hover:text-gray-300" id="tos-tab" data-tabs-target="#tos" type="button" role="tab" aria-controls="tos" aria-selected="false">Qualifying</button>
+                </li>
+            </ul>
+        </div>
+        <div id="myTabContent">
+            <div class="hidden" id="assessment" role="tabpanel" aria-labelledby="assessment-tab">
+                <table class="w-full text-sm text-left ">
+                    <thead class="text-xs  sticky-header">
+                        <tr class="">
+                            <th scope="col" class="whitespace-no-wrap rounded-tl-md px-6 py-3 text-left">
+                                Exam ID
+                            </th>
+                            <th scope="col" class="px-6 py-3 w-3/5 text-left">
+                                Period
+                            </th>
+                            <th scope="col" class="rounded-tr-md px-6 py-3 text-left">
+                                Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center text-xs overflow-y-auto max-h-[300px] ">
+                        {% for assessment in assessment %}
+                            <tr class="bg-white text-md hover-row border-b border-gray-500 dark:border-gray-200 whitespace-no-wrap"
+                                onclick="window.location='{% url 'print_generated_assessment' assessment.assessment_exam_id %}';"
+                                style="cursor: pointer;">
+                                <td class="text-left px-6 py-2 font-medium " style="white-space: nowrap; text-decoration: none;">
+                                    {{assessment.assessment_exam_id}}
+                                </td>
+                                <td class="text-left px-6 py-2 font-medium " style="white-space: nowrap; text-decoration: none;">
+                                    {{assessment.assessment.subject.subject_code}} - {{assessment.assessment.topic.topic_name|first_letters}}
+                                </td>
+                                <td class="text-left px-6 py-2 font-medium " style="white-space: nowrap; text-decoration: none;">
+                                    {{assessment.created_at}}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="hidden" id="tos" role="tabpanel" aria-labelledby="tos-tab">
+                <table class="w-full text-sm text-left ">
+                    <thead class="text-xs  sticky-header">
+                        <tr class="">
+                            <th scope="col" class="rounded-tl-md px-6 py-3 text-left">
+                                Exam ID
+                            </th>
+                            <th scope="col" class="px-6 py-3 w-3/5 text-left">
+                                Subject
+                            </th>
+                            <th scope="col" class="rounded-tr-md px-6 py-3 text-left">
+                                Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center text-xs overflow-y-auto max-h-[300px] bg-white">
+                        {% for table_of_specification in table_of_specification %}
+                            <tr class="text-md hover-row border-b border-gray-500 dark:border-gray-200 whitespace-no-wrap"
+                                onclick="window.location='{% url 'print_generated_tableOfSpecification' table_of_specification.tos_exam_id %}';"
+                                style="cursor: pointer;">
+                                <td class="text-left px-6 py-2 font-medium " style="white-space: nowrap; text-decoration: none;">
+                                    {{table_of_specification.tos_exam_id }}
+                                </td>
+                                <td class="text-left px-6 py-2 font-medium " style="white-space: nowrap; text-decoration: none;">
+                                    {{ table_of_specification.tableofspecification.subject.subject_name|upper }}
+                                </td>
+                                <td class="text-left px-6 py-2 font-medium " style="white-space: nowrap; text-decoration: none;">
+                                    {{table_of_specification.created_at }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+
+<dialog id="createconfirmation" class="fixed inset-0 z-50 rounded-lg border border-gray-400">
+  <div class="flex items-center justify-center border-blue-200">
+      <div class="max-w-md w-full p-4 rounded-lg" id="cardtext">
+          <p class="py-2">Add Competency?</p>
+          <div class="flex justify-end mt-4">
+              <button id="cards" class="bg-gray-400 hover:bg-gray-500 text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr mr-2" onclick="closeModal()">Cancel</button>
+              <button class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" onclick="confirmCreate()">Create</button>
+          </div>
+      </div>
+  </div>
+</dialog> 
+
+
+<div class="flex justify-between mx-4 items-center mb-4">
+  <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+    <button onclick="window.location='{% url 'modulessubtopic' %}';"  >
+      <i class='bx bx-arrow-back'></i>
+    </button>
+  </div>
+  <h1 class="text-center text-3xl font-semibold" id="cardtext">Create Students</h1>
+  <div class="w-8"></div>
+</div>
+
+<form action="{% url 'modules_create_subtopic_final'%}" method="post">
+  {% csrf_token %}
+<div class="grid grid-cols-2 gap-4 pb-6 p-6 w-full h-full" id="cardtext">
+  <div class="w-full">
+    <label for="topic_modules" id="cardtext">Competency</label>
+    <input name="subtopic_name_modules" type="text" id="topic_modules" class="text-sm border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+  </div>
+  <div class="col-span-1 w-full">
+    <label for="drop1" id="cardtext">Topic</label>
+    <select
+            class="ddrop  border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" 
+            required
+            name="topic_subtopic_modules"
+            id="drop1">
+        <option value="">Select</option>
+        {% for topic in topics %}
+        <option value="{{topic.id}}">{{topic.topic_name | capfirst}}</option>
+        {% endfor %}
+    </select>
+    <div class="col-span-1 mt-6 flex gap-4 justify-end relative">
+      <form method="POST" class="text-sm" onsubmit="openModal(event)">
+        <!-- Form contents here -->
+        <div class="mt-auto flex my-4">
+
+            <button id="btns" class="sbmtbtn text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="button" onclick="openModal(event)">
+                Submit
+            </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</form>
+
+<script>
+  function openModal(event) {
+    event.preventDefault(); 
+    document.getElementById('createconfirmation').showModal();
+}
+
+function closeModal() {
+    document.getElementById('createconfirmation').close(); 
+}
+
+function confirmCreate() {
+    document.querySelector('form').submit(); 
+}
+</script>

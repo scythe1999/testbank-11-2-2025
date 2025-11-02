@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="w-full ">
+
+<div class="flex justify-between items-center mb-4">
+  <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+    <button onclick="window.history.back()">
+      <i class='bx bx-arrow-back'></i>
+    </button>
+  </div>
+  <h1 class="text-center text-3xl font-semibold" id="cardtext">Create Academic Year</h1>
+  <div class="w-8"></div>
+</div>
+
+<form action="{% url 'academicyearcreate' %}" method="post" class="my-auto flex flex-col">
+  {% csrf_token %}
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6" id="cardtext">
+    <div class="container mx-auto text-sm">
+      <label for="{{ form.academic_year.id_for_label }}" class="block mb-2">Select Academic Year</label>
+      {{ form.academic_year }}
+    </div>
+    <div class="w-full text-sm">
+      <label for="period" class="block mb-2">Period</label>
+      <select name="period" required class="ddrop border-gray-200 rounded-md shadow-lg outline-none w-full p-2">
+          <option value="first" selected>First</option>
+          <option value="second">Second</option>
+      </select>
+    </div>
+    <div class="w-full text-sm">
+      <label for="activestatus" class="block mb-2">Active Status</label>
+      <select name="activestatus" required class="ddrop border-gray-200 rounded-md shadow-lg outline-none w-full p-2">
+          <option value="0" selected>Inactive</option>
+          <option value="1">Active</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="mt-auto flex justify-end">
+    <button id="btns" class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition duration-200 ease-in-out" type="submit">Submit</button>
+  </div>
+</form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const selects = document.querySelectorAll("select");
+    selects.forEach(select => {
+      select.classList.add("ddrop", "border","border-gray-200", "rounded-md", "shadow-lg", "outline-none", "w-full", "p-2");
+    });
+  });
+</script>
+{% endblock %}

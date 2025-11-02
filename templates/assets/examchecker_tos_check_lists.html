@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+  .hover-row:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+</style>
+
+<div class="flex justify-between items-center mx-6">
+    <form class="relative ml-auto" method="GET" action="{% url 'check_tos' %}">
+        <label for="default-search" class="sr-only">Search</label>
+        <div class="flex items-center border border-gray-500 rounded-lg overflow-hidden bg-transparent">
+            <input 
+                name="q" 
+                type="search" 
+                id="default-search" 
+                class="block w-full p-3 text-xs outline-none bg-transparent text-black" 
+                placeholder="Search..." 
+                oninput="checkInput()"
+                {% if q %}
+                value="{{ q }}" 
+                {% else %}
+                value=""
+                {% endif %}
+                required 
+            />
+            <button 
+                type="submit" 
+                class="text-white buttons_for_ocr font-medium text-xs px-4 py-2 rounded-lg ml-2"
+            >Search</button>
+        </div>
+    </form>
+</div>
+<div class="mx-6 my-2 relative overflow-x-auto shadow-md sm:rounded-md table-container">
+    <table class="w-full text-sm text-left rtl:text-right ">
+        <thead class="text-xs sticky-header">
+            <tr>
+                <th scope="col" class="px-6 py-3 w-3/5 text-left">
+                    Exam ID
+                </th>
+                <th scope="col" class="py-3 text-left">
+                    Subject
+                </th>
+                <th scope="col" class="py-3 text-left">
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody class="text-xs" id="cardtext">
+            {% for representative in representative_entries %}
+            <tr class="border-b border-gray-500 dark:border-gray-200 hover-row bg-white" 
+                {% if representative.status == 1 %}
+                style="cursor: default; background-color: #f0f0f0;" 
+                onclick="return false;"
+                {% else %}
+                    onclick="window.location='{% url 'import_csv_tos' representative.tos_exam_id %}';"
+                    style="cursor: pointer;"
+                {% endif %}>
+                
+                <td class="px-6 py-2 font-medium whitespace-nowrap">
+                    {{ representative.tos_exam_id }}
+                </td>
+                <td class="py-2 text-left">
+                    {{ representative.subject.subject_name }}
+                </td>
+                <td class="py-2 text-left">
+                    {% if representative.status == 0 %}
+                    <span class="status unchecked text-yellow-500"><i class="fas fa-times-circle"></i> Unchecked</span>
+                    {% else %}
+                    <span class="status checked text-green-500"><i class="fas fa-check-circle"></i> Checked</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+                  //=================search script=================
+    function checkInput() {
+        const searchInput = document.getElementById('default-search').value.trim(); 
+    
+        if (searchInput === '') {
+            window.location.href = "{% url 'check_tos' %}";  
+        }
+    }
+    </script>
+</div>
+
+{% endblock %}

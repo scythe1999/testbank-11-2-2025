@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <div class="w-full" id="cardtext">
+
+    <div class="flex justify-between mx-4 items-center mb-4">
+      <div class="text-3xl cursor-pointer px-5 py-2 w-8 transform hover:scale-110" id="cardtext">
+        <button onclick="window.history.back()">
+          <i class='bx bx-arrow-back'></i>
+        </button>
+      </div>
+      <h1 class="text-center text-3xl font-semibold" id="cardtext">Update Questionnaire</h1>
+      <div class="w-8"></div>
+    </div>
+  <form action="{% url 'updatequestion' q.id %}" method="post" class="flex flex-col w-full px-10">
+    {% csrf_token %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4">
+          <div class="pb-2 text-sm">
+              <p id="cardtext">Subject</p>
+              <select class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" 
+                      aria-label="Default select example"
+                      name="subjectupdate" 
+                      id="subjectupdate">
+                  <option value="{{q.subject.id}}" selected>{{q.subject.subject_name}}</option>
+                  {% for subject in subjectsup %}
+                    {% if subject.pk != q.subject.id %}
+                      <option value="{{ subject.pk }}">{{ subject.subject_name }}</option>
+                    {% endif %}
+                  {% endfor %}
+              </select>
+          </div>
+          
+          <div class="pb-2 text-sm" id="topic-container">
+              <p id="cardtext">Topic</p>
+              <select class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" 
+                      aria-label="Default select example" 
+                      name="topicupdate"
+                      id="topicupdate">
+                  <option value="{{q.topic.id}}" selected>{{q.topic.topic_name}}</option>
+                  {% for topic in topics %}
+                    {% if topic.pk != q.topic.id %}
+                      <option value="{{ topic.pk }}">{{ topic.topic_name }}</option>
+                    {% endif %}
+                  {% endfor %}
+              </select>
+          </div>
+
+          <div class="pb-2 text-sm" id="subtopic-container">
+              <p id="cardtext">Sub-topic</p>
+              <select class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" 
+                      aria-label="Default select example" 
+                      name="subtopicupdate" 
+                      id="subtopicupdate">
+                  <option value="{{q.subtopic.id}}" selected>{{q.subtopic.subtopic_name}}</option>
+                  {% for subtopic in subtopics %}
+                    {% if subtopic.pk != q.subtopic.id %}
+                      <option value="{{ subtopic.pk }}">{{ subtopic.subtopic_name }}</option>
+                    {% endif %}
+                  {% endfor %}
+              </select>
+          </div>
+          <div class="pb-2 text-sm">
+              <p id="cardtext">Category</p>
+              <select name="categoryupdate" class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" required>
+                  <option value="{{q.category.id}}" selected>{{q.category.category}}</option>
+                  {% for category in categories %}
+                    {% if category.id != q.category.id %}
+                      <option value="{{ category.id }}">{{ category.category }}</option>
+                    {% endif %}
+                  {% endfor %}
+              </select>
+          </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+        <div class="w-full text-sm">
+          <p id="cardtext">Description<span class="text-red-500"> *</span></p>
+          <textarea name="descriptionupdate" class="border border-gray-200  rounded-md shadow-lg outline-none w-full resize-none p-2 whitespace-pre-wrap" rows="11">{{q.description}}</textarea>
+        </div>
+      
+        <div class="flex flex-col gap-2">
+          <div class="w-full text-sm">
+            <label for="corans" id="cardtext">Best choice</label>
+            <input name="correctansupdate" type="text" id="corans" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" value="{{q.correct_answer}}" required />
+          </div>
+          <div class="w-full text-sm">
+            <label for="dis1" id="cardtext">Choices</label>
+            <input name="distructorupdate1" type="text" id="dis1" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" value="{{q.distructor1}}" required />
+          </div>
+          <div class="w-full text-sm">
+            <label for="dis2" id="cardtext">Choices</label>
+            <input name="distructorupdate2" type="text" id="dis2" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" value="{{q.distructor2}}" required />
+          </div>
+          <div class="w-full text-sm">
+            <label for="dis3" id="cardtext">Choices</label>
+            <input name="distructorupdate3" type="text" id="dis3" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" value="{{q.distructor3}}" required />
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="mt-auto flex gap-4">
+          <span class="flex-1"></span>
+          <button id="btns" class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="submit">
+            Update
+          </button>
+      </div>
+  </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#subjectupdate').change(function() {
+        var subject_id = $(this).val();
+        $.ajax({
+            url: "{% url 'update' q.id %}",
+            data: {
+                'subject_id': subject_id
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('#topicupdate').empty().append('<option selected disabled>Select</option>');
+                $('#subtopicupdate').empty().append('<option selected disabled>Select</option>');
+                $.each(data.topics, function(index, topic) {
+                    $('#topicupdate').append($('<option>', {
+                        value: topic.id,
+                        text: topic.topic_name
+                    }));
+                });
+            }
+        });
+    });
+
+    $('#topicupdate').change(function() {
+        var topic_id = $(this).val();
+        $.ajax({
+            url: "{% url 'update' q.id %}",
+            data: {
+                'topic_id': topic_id
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('#subtopicupdate').empty().append('<option selected disabled>Select</option>');
+                $.each(data.subtopics, function(index, subtopic) {
+                    $('#subtopicupdate').append($('<option>', {
+                        value: subtopic.id,
+                        text: subtopic.subtopic_name
+                    }));
+                });
+            }
+        });
+    });
+});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,4 @@
+<option value="">Select</option>
+{% for subtopic in subtopics %}
+<option value="{{ subtopic.pk }}">{{ subtopic.subtopic_name|upper|truncatechars:42  }}</option>
+{% endfor %}

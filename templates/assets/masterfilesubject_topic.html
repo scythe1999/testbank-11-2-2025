@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+  .hover-row:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+</style>
+
+  {% include "includes/modulesnav.html" %}
+  
+
+  <div class="w-full h-full px-6 py-6" id="topicmoduletable">
+
+    {% if messages %}
+    <div class="messages-container" id="cardtext">
+        {% for message in messages %}
+        <div class="message bg-custom-primary border border-gray-600 text-custom-text bg-green-400 px-3 py-2 rounded flex justify-between items-center">
+            <span>{{ message }}</span>
+            <button type="button" class="close-btn ml-2" onclick="this.parentElement.style.display='none'">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex justify-between items-center my-2">
+      <div class="">
+        <div 
+        hx-get="{% url 'modules_create_topic' %}"
+        hx-trigger="click"
+        hx-target="#topicmoduletable"
+        >
+          <button id="btns" type="button" class="bg-blue-500 hover:bg-blue-600 font-medium text-xs px-4 py-2 rounded-lg">
+            Create
+          </button>
+        </div>
+      </div>
+      <form class="relative ml-auto" method="GET" action="{% url 'modulestopic' %}">
+          <label for="default-search" class="sr-only">Search</label>
+          <div class="flex items-center border border-gray-500 rounded-lg overflow-hidden bg-transparent">
+              <input 
+                  name="q" 
+                  type="search" 
+                  id="default-search" 
+                  class="block w-full p-3 text-xs outline-none bg-transparent text-black" 
+                  placeholder="Search..." 
+                  oninput="checkInput()"
+                  value="{{ request.GET.q }}" 
+                  {% if q %}
+                  value="{{ q }}" 
+                  {% else %}
+                  value=""
+                  {% endif %}
+                  required 
+              />
+              <button 
+                  type="submit" 
+                  class="text-white buttons_for_ocr font-medium text-xs px-4 py-2 rounded-lg ml-2"
+              >Search</button>
+          </div>
+      </form>
+    </div>
+    <div class="overflow-x-auto shadow-md sm:rounded-md table-container">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs dark:text-gray-400 sticky-header">
+          <tr>
+            <th scope="col" class="flex-1 px-6 py-3">
+              Topic name
+            </th>
+            <th scope="col" class="w-1/4 px-3 py-3">
+              <select id="subjectDropdown" class="w-full text-xs text-left rtl:text-right text-white bg-transparent outline-none"  onchange="filterTopics()">
+                <option class="text-xs text-gray-600" value="">Subject</option>
+                {% for subject in subjects %}
+                  <option class="text-gray-600" value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                {% endfor %}
+              </select>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="text-xs overflow-y-auto max-h-[300px]" id="restrict_body">
+          {% for topic in topics %}
+            <tr class="hover-row border-b border-gray-500 dark:border-gray-200 whitespace-no-wrap topic-row" data-topic-id="{{ topic.id }}" data-subject-id="{{ topic.subject_topic.id }}" onclick="window.location='{% url 'modulestopicupdate' topic.id %}';" style="cursor: pointer;">
+              <td class="px-6 py-2 font-medium dark:text-gray-400" style="white-space: nowrap;">
+                {{ topic.topic_name|capfirst|truncatechars:80 }}
+              </td>
+              <td class="px-3 py-2 dark:text-gray-400" style="white-space: nowrap;">
+                {{ topic.subjectcode|truncatechars:25 }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    </div>
+  </div>
+  <script>
+    function filterTopics() {
+      var selectedSubject = document.getElementById('subjectDropdown').value;
+      var rows = document.getElementsByClassName('topic-row');
+    
+      for (var i = 0; i < rows.length; i++) {
+        var subjectMatch = selectedSubject == "" || rows[i].getAttribute('data-subject-id') == selectedSubject;
+        
+        if (subjectMatch) {
+          rows[i].style.display = '';
+        } else {
+          rows[i].style.display = 'none';
+        }
+      }
+    }
+    function checkInput() {
+      const searchInput = document.getElementById('default-search').value.trim(); 
+  
+      if (searchInput === '') {
+          window.location.href = "{% url 'modulestopic' %}";  
+      }
+  }
+  </script>
+</div>
+{% endblock content %}

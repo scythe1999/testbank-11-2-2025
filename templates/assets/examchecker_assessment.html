@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="w-full p-4 ml-4 " id="cardtext">
+
+    <div class="flex justify-between items-center mb-4">
+      <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+        <button onclick="window.history.back()">
+          <i class='bx bx-arrow-back'></i>
+        </button>
+      </div>
+      <h1 class="text-center text-3xl font-semibold" id="cardtext">Upload CSV File</h1>
+      <div class="w-8"></div>
+    </div>
+    {% if error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ error }}
+        </div>
+    {% endif %}
+    <div class="space-y-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-4 items-center">
+                <div class="flex items-end">
+                    <div class="flex-grow">
+                        <input type="file" name="csv_file" id="csvFile" accept=".csv"
+                               class="bg-white block w-full border border-gray-300 rounded-md px-3 py-1.5 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                               required>
+                    </div>
+                    <button type="submit" class="buttons_for_ocr text-white ml-2 py-3 px-4 rounded-lg text-xs">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    {% if scores_table %}
+        <h3 class="text-sm font-bold mt-6 mb-4 text-gray-700">Scores and Ranks:</h3>
+        <div class="overflow-x-auto bg-white">
+            <table class="border-collapse w-full">
+                <div class="overflow-x-auto">
+                    {{ scores_table|safe }}
+                </div>
+            </table>
+            {% if restricted_count_by_category %}
+        <h3 class="text-sm font-bold mt-6 mb-4 text-gray-700">Restricted Questions Count by Category:</h3>
+
+            <table class="bg-white table-auto border-collapse border border-gray-400 w-full text-sm text-left">
+                <thead>
+                    <tr>
+                        <th class="text-left px-4">Category</th>
+                        <th class="text-left px-4">Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category, count in restricted_count_by_category.items %}
+                        <tr>
+                            <td class="text-left px-4">{{ category|upper }}</td>
+                            <td class="text-left px-4">{{ count }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+            <h3 class="text-sm font-bold mt-6 mb-4 text-gray-700">Questions to Restrict:</h3>
+        <div class="overflow-x-auto">
+            <table class="border-collapse w-full">
+                <div class="overflow-x-auto">
+                    <ul class="list-disc pl-5">
+                        {% for question in restricted_questions %}
+                            <li class="text-gray-600 text-xs">{{ question }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </table>
+        </div>
+        <form method="post" action="{% url 'save_data_assessment' %}" class="mt-4">
+            {% csrf_token %}
+            <div class="flex justify-end">
+                <button type="submit" class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr">
+                    Save Data
+                </button>
+            </div>
+
+        </form>
+        </div>
+
+
+    {% endif %}
+
+</div>
+{% endblock %}

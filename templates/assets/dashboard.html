@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/main.css' %}">
+<section class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-800 text-slate-100">
+  <div class="w-full px-4 py-10">
+    <div class="flex flex-col gap-8">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div class="space-y-3 max-w-3xl">
+          <p class="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-200">Dashboard</p>
+          <h1 class="text-3xl font-semibold sm:text-4xl">Performance Overview</h1>
+          <p class="text-sm text-indigo-100/80 md:text-base">Monitor institutional performance, student engagement, and assessment health through the interactive insights below.</p>
+        </div>
+        <div class="grid w-full max-w-lg grid-cols-1 gap-4 sm:grid-cols-2 lg:max-w-none">
+          <div class="rounded-2xl border border-white/20 bg-white/90 p-6 text-sm shadow-xl backdrop-blur">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.4em] text-slate-500">Assessments Tracked</p>
+            <p class="mt-3 text-3xl font-semibold text-slate-900">{{ assessment_records|length }}</p>
+            <p class="mt-1 text-sm text-slate-600">Active evaluation sets across all subjects.</p>
+          </div>
+          <div class="rounded-2xl border border-white/20 bg-white/90 p-6 text-sm shadow-xl backdrop-blur">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.4em] text-slate-500">Subjects Monitored</p>
+            <p class="mt-3 text-3xl font-semibold text-slate-900">{{ subject_data|length }}</p>
+            <p class="mt-1 text-sm text-slate-600">Subject areas contributing to the current overview.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="col-span-1">
+          <div class="card card-stats group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" id="cardbody">
+            <div class="flex items-start justify-between">
+              <div class="flex flex-col gap-2">
+                <h5 class="card-title text-xs font-semibold uppercase tracking-[0.3em] text-slate-600" id="cardtext">Students</h5>
+                <span class="text-3xl font-semibold text-slate-900" id="summarytotals">{{enrolled_students_count}}</span>
+              </div>
+              <div id="cards" class="icon icon-shape flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg">
+                <i class='bx bx-user-circle text-lg'></i>
+              </div>
+            </div>
+            <p class="mt-6 flex items-center justify-between text-xs font-medium text-slate-600" id="cardtext">
+              <span class="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" id="cards_icon" viewBox="0 0 448 512">
+                  <path d="M219.3 .5c3.1-.6 6.3-.6 9.4 0l200 40C439.9 42.7 448 52.6 448 64s-8.1 21.3-19.3 23.5L352 102.9l0 57.1c0 70.7-57.3 128-128 128s-128-57.3-128-128l0-57.1L48 93.3l0 65.1 15.7 78.4c.9 4.7-.3 9.6-3.3 13.3s-7.6 5.9-12.4 5.9l-32 0c-4.8 0-9.3-2.1-12.4-5.9s-4.3-8.6-3.3-13.3L16 158.4l0-71.8C6.5 83.3 0 74.3 0 64C0 52.6 8.1 42.7 19.3 40.5l200-40zM111.9 327.7c10.5-3.4 21.8 .4 29.4 8.5l71 75.5c6.3 6.7 17 6.7 23.3 0l71-75.5c7.6-8.1 18.9-11.9 29.4-8.5C401 348.6 448 409.4 448 481.3c0 17-13.8 30.7-30.7 30.7L30.7 512C13.8 512 0 498.2 0 481.3c0-71.9 47-132.7 111.9-153.6z"/>
+                </svg>
+                Enrolled Students
+              </span>
+              <span class="rounded-full bg-emerald-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">Active</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-span-1">
+          <div class="card card-stats group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" id="cardbody">
+            <div class="flex items-start justify-between">
+              <div class="flex flex-col gap-2">
+                <h5 class="card-title text-xs font-semibold uppercase tracking-[0.3em] text-slate-600" id="cardtext">Questionnaires</h5>
+                <span class="text-3xl font-semibold text-slate-900" id="summarytotals">{{total}}</span>
+              </div>
+              <div id="cards" class="icon icon-shape flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg">
+                <i class='bx bx-receipt text-lg'></i>
+              </div>
+            </div>
+            <p class="mt-6 flex items-center justify-between text-xs font-medium text-slate-600" id="cardtext">
+              <span class="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" id="cards_icon" viewBox="0 0 576 512">
+                  <path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5l0-377.4c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8L0 454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5l0-370.3c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11L304 456c0 11.4 11.7 19.3 22.4 15.5z"/>
+                </svg>
+                Total Questionnaires
+              </span>
+              <span class="rounded-full bg-indigo-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">Updated</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-span-1">
+          <div class="card card-stats group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" id="cardbody">
+            <div class="flex items-start justify-between">
+              <div class="flex flex-col gap-2">
+                <h5 class="card-title text-xs font-semibold uppercase tracking-[0.3em] text-slate-600" id="cardtext">Restricted</h5>
+                <span class="text-3xl font-semibold text-slate-900" id="summarytotals">{{restricted_counts}}</span>
+              </div>
+              <div id="cards" class="icon icon-shape flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg">
+                <i class='bx bxs-edit-alt text-lg'></i>
+              </div>
+            </div>
+            <p class="mt-6 flex items-center justify-between text-xs font-medium text-slate-600" id="cardtext">
+              <span class="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" id="cards_icon" viewBox="0 0 512 512">
+                  <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+                </svg>
+                Total Restricted
+              </span>
+              <span class="rounded-full bg-amber-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">Review</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-span-1">
+          <div class="card card-stats group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" id="cardbody">
+            <div class="flex items-start justify-between">
+              <div class="flex flex-col gap-2">
+                <h5 class="card-title text-xs font-semibold uppercase tracking-[0.3em] text-slate-600" id="cardtext">Passing Rate</h5>
+                <span class="text-3xl font-semibold text-slate-900" id="summarytotals">{{overall_percentage|floatformat:2}}%</span>
+              </div>
+              <div id="cards" class="icon icon-shape flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg">
+                <i class='bx bxs-objects-vertical-bottom text-lg'></i>
+              </div>
+            </div>
+            <p class="mt-6 flex items-center justify-between text-xs font-medium text-slate-600" id="cardtext">
+              <span class="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" id="cards_icon" viewBox="0 0 384 512">
+                  <path d="M374.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-320 320c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l320-320zM128 128A64 64 0 1 0 0 128a64 64 0 1 0 128 0zM384 384a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z"/>
+                </svg>
+                General Average
+              </span>
+              <span class="rounded-full bg-sky-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-sky-700">Trending</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-100 py-12">
+  <div class="w-full px-4">
+    <div class="space-y-12">
+      <!-- Header Section -->
+      <div class="text-center text-slate-700">
+        <h2 class="text-3xl font-semibold text-slate-900">Performance Insights</h2>
+        <p class="text-base text-slate-600 md:text-lg mt-2">Explore how restrictions and assessments are distributed across Bloom's taxonomy levels. Use the filters to focus on a specific assessment and track progress over time.</p>
+      </div>
+
+      <!-- Main Content Section -->
+      <div class="grid gap-8 xl:grid-cols-3">
+        <!-- Doughnut Chart Section -->
+        <div class="xl:col-span-1">
+          <div class="flex flex-col justify-between rounded-2xl bg-white p-6 shadow-xl ring-1 ring-slate-900/5">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-xl font-semibold text-slate-900">Restricted Distribution</h3>
+                <p class="mt-2 text-sm text-slate-500">A visual breakdown of restricted questionnaires across all cognitive skill levels.</p>
+              </div>
+              <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">{{restricted_counts}}</span>
+            </div>
+            <div class="mt-8 flex grow items-center justify-center">
+              <canvas id="chartDoughnut" class="!h-64 !w-64"></canvas>
+            </div>
+            <p class="mt-8 text-center text-xs text-slate-400">Hover over the chart segments to view the share for each competency.</p>
+          </div>
+        </div>
+
+        <!-- Bar Chart Section -->
+        <div class="xl:col-span-2">
+          <div class="flex flex-col gap-8 rounded-2xl bg-white p-6 shadow-xl ring-1 ring-slate-900/5">
+            <!-- Title & Dropdown Section -->
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h3 class="text-xl font-semibold text-slate-900">Assessment Performance</h3>
+                <p class="text-sm text-slate-500">Compare competency mastery across assessments or review the combined overall trend.</p>
+              </div>
+              <div class="w-full lg:w-64">
+                <label for="assessmentDropdown" class="sr-only">Select assessment</label>
+                <select id="assessmentDropdown" class="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-3 pr-10 text-sm font-medium text-slate-700 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200">
+                  <option value="overall" data-remembering="{{ overall_percentages.remembering_percentage }}" data-creating="{{ overall_percentages.creating_percentage }}" data-understanding="{{ overall_percentages.understanding_percentage }}" data-applying="{{ overall_percentages.applying_percentage }}" data-analyzing="{{ overall_percentages.analyzing_percentage }}" data-evaluating="{{ overall_percentages.evaluating_percentage }}" data-average="{{ overall_percentages.calculate_overall_percentage }}">
+                    Overall
+                  </option>
+                  {% for record in assessment_records %}
+                  <option value="{{ record.assessment_id }}" data-remembering="{{ record.calculate_remembering_percentage }}" data-creating="{{ record.calculate_creating_percentage }}" data-understanding="{{ record.calculate_understanding_percentage }}" data-applying="{{ record.calculate_applying_percentage }}" data-analyzing="{{ record.calculate_analyzing_percentage }}" data-evaluating="{{ record.calculate_evaluating_percentage }}" data-average="{{ record.calculate_overall_percentage }}">
+                    {{ record.topic }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+<!-- Subject Progress & Bar Chart Section -->
+<div class="flex flex-col gap-12">
+  <!-- Subject Progress Section (Single Row) -->
+  <div class="flex justify-between gap-6">
+    {% for subject in subject_data %}
+    <div class="relative flex items-center justify-center w-1/4 p-4 rounded-2xl bg-slate-50 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+      <svg class="h-24 w-24 rotate-[135deg]" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-slate-200" stroke-width="1.5" stroke-dasharray="75 100" stroke-linecap="round"></circle>
+        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-indigo-500" stroke-width="1.5" stroke-dasharray="{{ subject.percentage }} 100" stroke-linecap="round"></circle>
+      </svg>
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <span class="text-xs font-semibold text-indigo-600">{{ subject.percentage|floatformat:2 }}%</span>
+        <span class="text-[11px] font-medium uppercase tracking-wide text-slate-500">{{subject.subject_code}}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Bar Chart Section -->
+  <div class="flex justify-center">
+    <div class="h-[360px] w-full max-w-7xl" id="bar-chart"></div>
+  </div>
+</div>
+
+
+
+
+              <!-- Bar Chart Section -->
+              <div class="lg:flex-2">
+                <div class="h-[360px]" id="bar-chart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+<input type="number" id="statuss" value="0" class="hidden">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/@preline/plugin@1.0.0/dist/preline.min.js"></script>
+
+
+
+
+<script>
+
+
+
+// Doughnut Chart Configuration
+const dataDoughnut = {
+  labels: ["Remembering", "Creating", "Applying", "Evaluating", "Understanding", "Analyzing"],
+  datasets: [
+    {
+      label: "Restricted Counts",
+      data: [{{restricted_remembering}}, {{restricted_creating}}, {{restricted_applying}}, {{restricted_evaluating}}, {{restricted_understanding}}, {{restricted_analyzing}}],
+      backgroundColor: [
+        "rgb(54, 162, 235)",
+        "rgb(75, 192, 192)",
+        "rgb(255, 205, 86)",
+        "rgb(255, 159, 64)",
+        "rgb(153, 102, 255)",
+        "rgb(255, 99, 132)",
+      ],
+      hoverOffset: 4,
+    },
+  ],
+};
+
+const configDoughnut = {
+  type: "doughnut",
+  data: dataDoughnut,
+  options: {},
+};
+
+var chartBar = new Chart(
+  document.getElementById("chartDoughnut"),
+  configDoughnut
+);
+
+document.addEventListener('DOMContentLoaded', function () {
+  let chart;
+
+
+  const chartConfig = {
+      series: [],
+      chart: {
+          type: "bar",
+          height: 340,
+          toolbar: { show: false },
+      },
+      dataLabels: { enabled: false },
+      colors: ["#534a88"],
+      plotOptions: {
+          bar: { columnWidth: "40%", borderRadius: 2 },
+      },
+      xaxis: {
+          categories: [
+              "REMEMBERING",
+              "CREATING",
+              "UNDERSTANDING",
+              "APPLYING",
+              "ANALYZING",
+              "EVALUATING",
+              "AVERAGE",
+          ],
+          labels: {
+              style: { colors: "#243642", fontSize: "12px", fontFamily: "inherit", fontWeight: 300 },
+          },
+      },
+      yaxis: {
+          labels: {
+              style: { colors: "#243642", fontSize: "12px", fontFamily: "inherit", fontWeight: 400 },
+          },
+      },
+      grid: {
+          show: true,
+          borderColor: "#c9c7c7",
+          strokeDashArray: 5,
+          xaxis: { lines: { show: true } },
+          padding: { top: 20, right: 20 },
+      },
+      fill: { opacity: 0.8 },
+      tooltip: { theme: "dark" },
+  };
+
+  function updateBarChart(assessmentId) {
+      const selectedOption = document.querySelector(`#assessmentDropdown option[value='${assessmentId}']`);
+  
+      const remembering = parseFloat(selectedOption.dataset.remembering) || 0;
+      const creating = parseFloat(selectedOption.dataset.creating) || 0;
+      const understanding = parseFloat(selectedOption.dataset.understanding) || 0;
+      const applying = parseFloat(selectedOption.dataset.applying) || 0;
+      const analyzing = parseFloat(selectedOption.dataset.analyzing) || 0;
+      const evaluating = parseFloat(selectedOption.dataset.evaluating) || 0;
+
+      // Calculate average
+      const average = (remembering + creating + understanding + applying + analyzing + evaluating) / 6;
+
+      const data = [
+          remembering.toFixed(2), creating.toFixed(2), understanding.toFixed(2), applying.toFixed(2), analyzing.toFixed(2), evaluating.toFixed(2), average.toFixed(2)
+      ];
+
+      if (chart) {
+          chart.updateSeries([{
+              name: "Percentage",
+              data: data,
+          }]);
+      } else {
+          chartConfig.series = [{
+              name: "Percentage",
+              data: data,
+          }];
+
+          chart = new ApexCharts(document.querySelector("#bar-chart"), chartConfig);
+          chart.render();
+      }
+  }
+
+  function handleChange() {
+      updateBarChart(document.getElementById("assessmentDropdown").value);
+      changestatus();
+  }
+
+  document.getElementById('assessmentDropdown').addEventListener('change', handleChange);
+
+  handleChange(); 
+});
+
+
+</script>
+
+
+  </div>
+{% endblock content %}
+

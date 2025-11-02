@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load custom_filters %}
+<div class="w-full p-4 ml-4" id="cardtext">
+  <div class="flex justify-between items-center mb-4">
+      <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+        <button onclick="window.history.back()">
+          <i class='bx bx-arrow-back'></i>
+        </button>
+      </div>
+      <h1 class="text-center text-3xl font-semibold" id="cardtext">Students Statistics</h1>
+      <div class="w-8"></div>
+    </div>
+  {% if stud_stats %}
+  
+    <div class="student-info mb-6">
+      <p class="text-2xl font-semibold text-gray-800">Name: <span class="text-blue-600">{{ full_name|upper }}</span></p>
+      <p class="text-md text-gray-700">Student ID: <span class="text-blue-600">{{ studentid }}</span></p>
+      <p class="text-md text-gray-700">Student School ID: <span class="text-blue-600">{{ studentschoolid.studentschoolid }}</span></p>
+      <p class="text-md text-gray-700">Passing Rate for Assessment: <span class="text-blue-600">{{ score_percentages }}%</span></p>
+      <p class="text-md text-gray-700">Assessment Progress: <span class="text-blue-600">{{ total_percentage_w_assess }}%</span></p>
+      <p class="text-md text-gray-700">Total Contribution: <span class="text-blue-600">{{ total_contribution }}%</span></p>
+      <p class="text-md text-gray-700">Subjects:</p>
+      <ul class="text-md text-gray-700">
+        {% for subject_code, totals in subject_totals.items %}
+          <li><span class="text-md text-gray-700">{{ subject_code }}: <span class="text-blue-600">{{ totals.passing_rate }}%</span></span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-md table-container">
+      <table class="w-full text-sm text-left rtl:text-right" id="cardtext">
+          <thead class="text-xs sticky-header">
+              <tr>
+                  <th scope="col" class="py-3 text-left pl-4 whitespace-nowrap">
+                    Assessment ID
+                  </th>
+                  <th scope="col" class="px-3 py-3 text-center whitespace-nowrap">
+                    Period
+                  </th>
+                  <th scope="col" class="px-3 py-3 text-center whitespace-nowrap">
+                    Percentage Weight
+                  </th>
+                  <th scope="col" class="px-3 py-3 text-center whitespace-nowrap">
+                    Score
+                  </th>
+                  <th scope="col" class="px-3 py-3 text-center whitespace-nowrap">
+                    Contribution
+                  </th>
+              </tr>
+          </thead>
+          <tbody class="text-xs">
+              {% for stud in stud_stats %}
+              <tr class="bg-white border-b border-gray-500 dark:border-gray-200">
+                  <td class="py-2 text-left pl-4">
+                    {{ stud.exam_id }}
+                  </td>
+                  <td class="py-2 pl-3 text-center">
+                    {{ stud.subject_code }}-{{ stud.topic_name|first_letters }}
+                  </td>
+                  <td class="py-2 text-center">
+                    {{ stud.percentage_w_assess }}%
+                  </td>
+                  <td class="py-2 pl-3 text-center">
+                    {{ stud.total_questions_score }} / 100
+                  </td>
+                  <td class="py-2 pl-3 text-center">
+                    {{ stud.contribution }}%
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500 mt-6">No statistics available for this student ID.</p>
+  {% endif %}
+</div>
+{% endblock %}

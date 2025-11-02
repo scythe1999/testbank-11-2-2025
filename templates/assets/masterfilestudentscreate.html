@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="w-full" id="cardtext">
+
+
+
+
+
+
+
+
+<dialog id="createconfirmation" class="fixed inset-0 z-50 rounded-lg border border-gray-400">
+    <div class="flex items-center justify-center border-blue-200">
+        <div class="max-w-md w-full p-4 rounded-lg" id="cardtext">
+            <p class="py-2">Confirm student?</p>
+            <div class="flex justify-end mt-4">
+                <button id="cards" class="bg-gray-400 hover:bg-gray-500 text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr mr-2" onclick="closeModal()">Cancel</button>
+                <button class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" onclick="confirmCreate()">Create</button>
+            </div>
+        </div>
+    </div>
+</dialog> 
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="flex justify-between mx-4 items-center mb-4">
+    <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+      <button onclick="window.history.back()">
+        <i class='bx bx-arrow-back'></i>
+      </button>
+    </div>
+    <h1 class="text-center text-3xl font-semibold" id="cardtext">Create Students</h1>
+    <div class="w-8"></div>
+  </div>
+<form action="
+  {% url 'masterfilestudentscreate' %}
+  " method="post" class="my-auto flex flex-col w-full p-6">
+
+
+  {% if messages %}
+  <div class="messages-container pb-2" id="cardtext">
+      {% for message in messages %}
+      <div class="message bg-custom-primary border border-gray-600 text-custom-text bg-green-400 px-3 py-2 rounded flex justify-between items-center">
+          <span>{{ message }}</span>
+          <button type="button" class="close-btn ml-2" onclick="this.parentElement.style.display='none'">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      {% endfor %}
+  </div>
+{% endif %}
+    
+    {% csrf_token %}
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-2 pb-6 w-1/2 px-auto mx-auto" id="cardtext">
+    <div class="w-full text-sm">
+      <label for="corans"  >Lastname</label>
+      <input  name="lastName" type="text" id="corans" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+    </div>
+    <div class="w-full text-sm">
+      <label for="dis1"  >Firstname</label>
+      <input name="firstName" type="text" id="dis1" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+    </div>
+    <div class="w-full text-sm">
+      <label for="dis1">Student school ID</label>
+      <input name="studentschoolid" type="number" id="dis1" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+    </div>
+    <div class="w-full text-sm">
+      <label for="dis2"  >Student ID</label>
+      <input name="studentId" type="text" value="{{studentid}}" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" readonly />
+    </div>
+    <div class="text-sm" readonly>
+      <p >Academic period</p>
+      <select name="acadyear" class="ddrop border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" >
+          {% for academicyear in academicyear %}
+              <option value="{{ academicyear.pk }}" selected>{{ academicyear.year_series|capfirst }} {{ academicyear.period|capfirst }}</option>
+          {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <form method="POST" class="text-sm" onsubmit="openModal(event)">
+    <!-- Form contents here -->
+    <div class="mt-auto flex my-4">
+        <span class="flex-1"></span>
+        <button id="btns" class="sbmtbtn text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="button" onclick="openModal(event)">
+            Submit
+        </button>
+    </div>
+  </form>
+</form>  
+</div>
+
+
+<script>
+  function openModal(event) {
+    event.preventDefault(); 
+    document.getElementById('createconfirmation').showModal();
+}
+
+function closeModal() {
+    document.getElementById('createconfirmation').close(); 
+}
+
+function confirmCreate() {
+    document.querySelector('form').submit(); 
+}
+</script>
+
+
+
+{% endblock %}

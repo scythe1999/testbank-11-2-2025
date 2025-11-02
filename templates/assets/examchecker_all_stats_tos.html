@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% load custom_filters %}
+
+<div class="w-full p-4 ml-4" id="cardtext">
+    <div class="flex justify-between items-center mb-4">
+        <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+          <button onclick="window.history.back()">
+            <i class='bx bx-arrow-back'></i>
+          </button>
+        </div>
+        <h1 class="text-center text-3xl font-semibold" id="cardtext">Students Statistics</h1>
+        <div class="w-8"></div>
+      </div>
+  <p class="text-2xl font-semibold text-gray-800">Name: <span class="text-blue-600">{{ firstname|upper }} {{ lastname|upper }}</span></p>
+  <p class="text-md text-gray-700">Student ID: <span class="text-blue-600">{{ studentid }}</span></p>
+  <p class="text-md text-gray-700">Current Passing Rate for Qualifying Exam: <span class="text-blue-600">{{ overall_passing_rate|floatformat:2 }}%</span></p>
+  <p class="text-md text-gray-700">Table of Specification Progress: <span class="text-blue-600">{{ overall_percentage_weight|floatformat:2 }}%</span></p>
+  <p class="text-md text-gray-700">Total Contribution: <span class="text-blue-600">{{ overall_contribution|floatformat:2 }}%</span></p>
+
+  <table class="border-collapse w-full">
+      <div class="overflow-x-auto">
+          <ul class="list-disc">
+              {% for subjects in student_topic_subtopic_counts.values %}
+                  {% for subject_name, data in subjects.items %}
+                      <h4 class="text-sm font-bold mt-3">Subject: {{ subject_name|capfirst }} ({{ data.subject_pw|floatformat:2 }}%)</h4>
+                      <h4 class="text-sm font-bold mt-2">Passing Rate: {{ data.passing_rate|floatformat:2 }}%</h4>
+                      {% for topic_name, subtopics in data.topics.items %}
+                          <table class="min-w-full table-auto border-collapse text-xs text-left">
+                              <thead>
+                                  <tr class="bg-gray-400">
+                                      <th class="px-4 py-2 border-b border-gray-400">{{ topic_name }}</th>
+                                      <th class="px-4 py-2 border-b border-gray-400">Percentage Weight</th>
+                                      <th class="px-4 py-2 border-b border-gray-400">Question Count</th>
+                                      <th class="px-4 py-2 border-b border-gray-400">Correct Count</th>
+                                      <th class="px-4 py-2 border-b border-gray-400">Contribution</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for subtopic_name, counts in subtopics.items %}
+                                      <tr class="bg-white border-b border-gray-400">
+                                          <td class="px-4 py-2">{{ subtopic_name|capfirst|truncatechars:95 }}</td>
+                                          <td class="px-4 py-2">{{ counts.percentage_w_per_row|floatformat:2 }}%</td>
+                                          <td class="px-4 py-2">{{ counts.question_count }}</td>
+                                          <td class="px-4 py-2">{{ counts.correct_count }}</td>
+                                          <td class="px-4 py-2">{{ counts.contribution|floatformat:2 }}%</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      {% endfor %}
+                  {% endfor %}
+              {% endfor %}
+          </ul>
+      </div>
+  </table>
+</div>
+{% endblock %}

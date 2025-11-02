@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<div class="pt-2 ml-4">
+  {% if messages %}
+    <div class="messages-container pb-2" id="cardtext">
+        {% for message in messages %}
+        <div 
+            class="message bg-custom-primary border border-gray-600 text-custom-text px-3 py-2 rounded flex justify-between items-center
+            {% if message.tags == 'success' %} bg-green-400 {% elif message.tags == 'error' %}text-gray-200 bg-red-600 {% endif %}">
+            <span>{{ message }}</span>
+            <button type="button" class="close-btn ml-2" onclick="this.parentElement.style.display='none'">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+  {% endif %}
+
+</div>
+  <div class="w-full" id="cardtext">
+
+    <div class="flex justify-between mx-4 items-center mb-4">
+      <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+        <button onclick="window.history.back()">
+          <i class='bx bx-arrow-back'></i>
+        </button>
+      </div>
+      <h1 class="text-center text-3xl font-semibold" id="cardtext">Create Students</h1>
+      <div class="w-8"></div>
+    </div>
+    <form action="{% url 'addquestion' %}" method="post" class="my-auto flex flex-col w-full px-4">
+      {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 ">
+            <div class="pb-2 text-sm">
+                <p id="cardtext">Subject</p>
+                <select class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" 
+                        aria-label="Default select example"
+                        name="subjectcreate" 
+                        id="subjectcreate"
+                        hx-get="{% url 'subjectcreate' %}"
+                        hx-trigger="change"
+                        required
+                        hx-target="#topiccreate"
+                        hx-on="change: resetSubtopicCreate()">
+                    <option value="">Select</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.pk }}">{{ subject.subject_name|upper }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="pb-2 text-sm" id="topic-container">
+                <p id="cardtext">Topic</p>
+                <select class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" 
+                        aria-label="Default select example" 
+                        name="topiccreate"
+                        id="topiccreate"
+                        required
+                        hx-get="{% url 'topiccreate' %}"
+                        hx-trigger="change"
+                        hx-target="#subtopiccreate">
+                    {% include "partials/topic.html" %}
+    
+                </select>
+            </div>
+    
+            <div class="pb-2 text-sm" id="subtopic-container">
+                <p id="cardtext">Competency</p>
+                <select class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" 
+                        aria-label="Default select example" 
+                        name="subtopiccreate" 
+                        required
+                        id="subtopiccreate">
+                    {% include "partials/subtopic.html" %}
+                </select>
+            </div>
+            
+            <div class="pb-2 text-sm">
+                <p id="cardtext">Category</p>
+                <select name="categorycreate" class="ddrop border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" required>
+                  <option value="">Select</option>
+                  {% for category in category %}
+                        <option value="{{ category.id }}">{{ category.category | capfirst }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+          <div class="w-full text-sm">
+            <p id="cardtext">Question<span class="text-red-500"> *</span></p>
+            <textarea placeholder="Input here..." name="descriptioncreate" wrap="soft" class="border border-gray-200  table-container rounded-md shadow-lg outline-none w-full resize-none p-2 whitespace-pre-wrap" rows="11"></textarea>
+          </div>
+        
+          <div class="flex flex-col gap-2">
+            <div class="w-full text-sm">
+              <label for="corans" id="cardtext">Best choice</label>
+              <input name="correctanscreate" type="text" id="corans" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" required />
+            </div>
+            <div class="w-full text-sm">
+              <label for="dis1" id="cardtext">Choices</label>
+              <input name="distructorcreate1" type="text" id="dis1" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" required />
+            </div>
+            <div class="w-full text-sm">
+              <label for="dis2" id="cardtext">Choices</label>
+              <input name="distructorcreate2" type="text" id="dis2" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" required />
+            </div>
+            <div class="w-full text-sm">
+              <label for="dis3" id="cardtext">Choices</label>
+              <input name="distructorcreate3" type="text" id="dis3" class="border border-gray-200  rounded-md shadow-lg outline-none w-full p-2" required />
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-auto flex">
+            <span class="flex-1"></span>
+            <button id="btns" class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="submit">
+              Submit
+            </button>
+        </div>
+    </form>      
+</div>
+          <script>
+            function resetSubtopicCreate() {
+              document.getElementById('subtopiccreate').innerHTML = '<option value="">Select</option>';
+          }
+          </script>
+{% endblock content %}

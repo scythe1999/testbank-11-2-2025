@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div id="cardtext" class="p-4 text-xs">
+    {% if messages %}
+<div class="messages-container px-6 pb-2" id="cardtext">
+    {% for message in messages %}
+    <div class="message bg-custom-primary border border-gray-600 text-custom-text bg-green-400 px-3 py-2 rounded flex justify-between items-center">
+        <span>{{ message }}</span>
+        <button type="button" class="close-btn ml-2" onclick="this.parentElement.style.display='none'">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="flex justify-between items-center mb-4">
+    <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+      <button onclick="window.history.back()">
+        <i class='bx bx-arrow-back'></i>
+      </button>
+    </div>
+    <h1 class="text-center text-3xl font-semibold" id="cardtext">Upload CSV File</h1>
+    <div class="w-8"></div>
+  </div>
+    <form method="post" enctype="multipart/form-data" class="mb-4 flex items-center">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required class="block p-1 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mr-2">
+        <button type="submit" class="text-white font-medium text-xs px-4 py-2 rounded-lg buttons_for_ocr focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Upload</button>
+    </form>
+    
+    {% if data %}
+        <div class="flex space-x-4">
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold mb-2">CSV Data:</h3>
+                <table class="min-w-full bg-white border border-gray-300">
+                    {% for row in data|slice:":10" %}
+                        <tr {% if forloop.first %}id="batchart_title" class="text-white"{% endif %}>
+                            {% for cell in row %}
+                                <td class="border px-4 py-2">{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    {% if data|length > 11 %}
+                        <tr>
+                            <td colspan="{{ data.0|length }}" class="border px-4 py-2 text-center">...</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold mb-2">Select Columns:</h3>
+                <form method="post" action="{% url 'process_csv_data' %}">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label for="firstname" class="block mb-1">Firstname:</label>
+                        <select name="firstname" id="firstname" class="focus:outline-none p-2 border border-gray-300 rounded w-full" required>
+                            <option value="">Select</option>
+                            {% for cell in data.0 %}
+                                <option value="{{ forloop.counter0 }}">{{ cell }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="lastname" class="block mb-1">Lastname:</label>
+                        <select name="lastname" id="lastname" class="focus:outline-none p-2 border border-gray-300 rounded w-full" required>
+                            <option value="">Select</option>
+                            {% for cell in data.0 %}
+                                <option value="{{ forloop.counter0 }}">{{ cell }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="student_id" class="block mb-1">Student School ID:</label>
+                        <select name="student_id" id="student_id" class="focus:outline-none p-2 border border-gray-300 rounded w-full" required>
+                            <option value="">Select</option>
+                            {% for cell in data.0 %}
+                                <option value="{{ forloop.counter0 }}">{{ cell }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="flex justify-end" style="margin-top: 146px;">
+                        <button type="submit" class="rounded-lg text-white font-medium text-xs px-4 mt-2 py-2 buttons_for_ocr">Submit students</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if message %}
+        <p class="mt-4 text-red-500">{{ message }}</p>
+    {% endif %}
+</div>
+{% endblock %}

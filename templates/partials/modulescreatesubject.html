@@ -1,0 +1,75 @@
+<dialog id="createconfirmation" class="fixed inset-0 z-50 rounded-lg border border-gray-400">
+  <div class="flex items-center justify-center border-blue-200">
+      <div class="max-w-md w-full p-4 rounded-lg" id="cardtext">
+          <p class="py-2">Add subject?</p>
+          <div class="flex justify-end mt-4">
+              <button id="cards" class="bg-gray-400 hover:bg-gray-500 text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr mr-2" onclick="closeModal()">Cancel</button>
+              <button class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" onclick="confirmCreate()">Create</button>
+          </div>
+      </div>
+  </div>
+</dialog> 
+
+
+<div class="flex justify-between mx-4 items-center mb-4">
+  <div class="text-3xl cursor-pointer py-2 w-8 transform hover:scale-110" id="cardtext">
+    <button onclick="window.location='{% url 'modules' %}';" >
+      <i class='bx bx-arrow-back'></i>
+    </button>
+  </div>
+  <h1 class="text-center text-3xl font-semibold" id="cardtext">Create Students</h1>
+  <div class="w-8"></div>
+</div>
+
+<form class="text-sm" action="{% url 'modules_create_subject_final' %}" method="post">
+  {% csrf_token %}
+  <div class="relative grid grid-cols-1 gap-6 pb-6 p-6 w-full h-full" id="cardtext">
+    <div class="w-full">
+      <label for="subjectname_modules" class="text-sm">Subject Name</label>
+      <input name="subject_name_modules" type="text" id="subjectname_modules" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2 text-sm" required />
+    </div>
+
+    <div class="grid grid-cols-2 gap-6 w-full">
+      <div class="w-full">
+        <label for="subjectcode_modules" class="text-sm">Subject Code</label>
+        <input name="subject_code_modules" type="text" id="subjectcode_modules" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+      </div>
+      <div class="w-full">
+        <label for="subjectpw_modules" class="text-sm">Percentage Weight</label>
+        <input name="subject_pw_modules" type="number" class="border border-gray-200 rounded-md shadow-lg outline-none w-full p-2" required />
+      </div>
+    </div>
+    <div class="flex justify-end mt-6 gap-4">
+
+      <form method="POST" class="text-sm" onsubmit="openModal(event)">
+        <!-- Form contents here -->
+        <div class="mt-auto flex my-4">
+
+            <button id="btns" class="sbmtbtn text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="button" onclick="openModal(event)">
+                Submit
+            </button>
+        </div>
+      </form>
+
+      {% comment %} <button 
+        class="text-white font-medium text-xs px-4 mt-2 py-2 rounded-lg buttons_for_ocr" type="submit">
+        Submit
+      </button> {% endcomment %}
+    </div>
+  </div>
+  <script>
+    function openModal(event) {
+      event.preventDefault(); 
+      document.getElementById('createconfirmation').showModal();
+  }
+  
+  function closeModal() {
+      document.getElementById('createconfirmation').close(); 
+  }
+  
+  function confirmCreate() {
+      document.querySelector('form').submit(); 
+  }
+  </script>
+
+</form>
